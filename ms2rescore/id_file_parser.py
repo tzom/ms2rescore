@@ -179,13 +179,12 @@ class _Pipeline(ABC):
             spectrum_index_pattern=self._pin_spec_id_patterns[self._pin_spec_id_style]
         )
         titles, retention_times = parse_mgf_title_rt(self.path_to_mgf_file)
-        peprec.df["spec_id"] = peprec.df["spec_id"].map(titles)
         if "observed_retention_time" not in peprec.df.columns:
             # Map MGF titles and observed retention times
             peprec.df["observed_retention_time"] = peprec.df["spec_id"].map(
                 retention_times
             )
-
+        peprec.df["spec_id"] = peprec.df["spec_id"].map(titles)
         if not ~peprec.df["observed_retention_time"].isna().any():
             raise IDFileParserError(
                 "Could not map all MGF retention times to spectrum indices."
